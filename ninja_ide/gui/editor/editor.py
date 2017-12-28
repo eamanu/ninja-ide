@@ -24,6 +24,7 @@ from PyQt5.QtWidgets import (
     QPlainTextEdit,
     QAbstractSlider,
     QTextEdit,
+    QListWidget
     # QToolTip
 )
 from PyQt5.QtGui import (
@@ -84,6 +85,9 @@ logger = NinjaLogger(__name__)
 
 # FIXME: cursor width and blinking
 # FIXME: clone editor for spliting
+
+# TODO: autocompletor api
+from ninja_ide.intellisensei.completor.Completor import CompletorNinjaApi as CNA
 
 
 class NEditor(QPlainTextEdit):
@@ -296,6 +300,9 @@ class NEditor(QPlainTextEdit):
 
         self.cursorPositionChanged.connect(self._on_cursor_position_changed)
         self.cursorPositionChanged.connect(self.viewport().update)
+
+        # TODO: autocompletor api
+        self.api_autocompletor = CNA(self)
 
     def navigate_bookmarks(self, forward=True):
         if forward:
@@ -698,8 +705,11 @@ class NEditor(QPlainTextEdit):
             super().keyPressEvent(event)
         # Post key press
         self.postKeyPressed.emit(event)
+        #TODO: autocompletor api
+        self.api_autocompletor.list_pred_position = self.cursorRect().bottomLeft()
+        self.api_autocompletor.show()
 
-    def _auto_indent(self):
+    def _auto_Indent(self):
         cursor = self.textCursor()
         at_start_of_line = cursor.positionInBlock() == 0
         with self:
