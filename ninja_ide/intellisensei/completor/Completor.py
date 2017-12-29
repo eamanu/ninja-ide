@@ -1,7 +1,10 @@
 from PyQt5.QtWidgets import QListWidget
+from PyQt5.QtCore import pyqtSignal
 
 
 class CompletorNinjaApi(QListWidget):
+    
+    
     def __init__(self, parent=None):
         # QListWidget.__init__(parent)
         super(CompletorNinjaApi, self).__init__(parent)
@@ -10,6 +13,7 @@ class CompletorNinjaApi(QListWidget):
         self.___column_editor = 0
         self.___list_pred_position = None
         self.___language = None
+        self.hide()
 
     @property
     def text_script_complete(self):
@@ -52,6 +56,7 @@ class CompletorNinjaApi(QListWidget):
         self.___list_pred_position = qpoint
 
     def __fill_list(self, list_predictions):
+        self.clear()
         self.addItems(list_predictions)
 
     def put_predictions(self, list_pred=None):
@@ -65,9 +70,12 @@ class CompletorNinjaApi(QListWidget):
     def show_list_predictions(self):
         if self.___list_pred_position is None:
             raise Exception('Error with the text position cursor')
+        self.hide()
         self.move(self.___list_pred_position)
-        self.show() 
+        self.show()
 
     def hide_list_predictions(self):
         self.hide()
 
+    def clear_list_predictiones(self):
+        self.clear()

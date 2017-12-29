@@ -303,6 +303,7 @@ class NEditor(QPlainTextEdit):
 
         # TODO: autocompletor api
         self.api_autocompletor = CNA(self)
+        self.api_autocompletor.itemClicked.connect(self.insertText)
 
     def navigate_bookmarks(self, forward=True):
         if forward:
@@ -706,9 +707,14 @@ class NEditor(QPlainTextEdit):
         # Post key press
         self.postKeyPressed.emit(event)
         #TODO: autocompletor api
-        self.api_autocompletor.list_pred_position = self.cursorRect().bottomLeft()
-        self.api_autocompletor.show()
+        self.api_autocompletor.list_pred_position =\
+            self.cursorRect().bottomLeft()
+        self.api_autocompletor.put_predictions(["a", "b"])
+        self.api_autocompletor.show_list_predictions()
 
+    def insertText(self, text):
+        print(text.text())
+        
     def _auto_Indent(self):
         cursor = self.textCursor()
         at_start_of_line = cursor.positionInBlock() == 0
